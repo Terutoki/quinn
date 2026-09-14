@@ -391,7 +391,11 @@ fn insert_ordered(data: &mut VecDeque<Buffer>, buffer: Buffer) {
 ///
 /// Independent of how much memory those spans over-allocate. A frame is rejected only
 /// if compaction cannot get the count back down to this.
-const MAX_CHUNKS: usize = 1024;
+///
+/// MyQUIC2 fork: raised 1024 → 4096 (ngtcp2 uses 4000). An 8MB stream window holds
+/// ~5900 packets in flight at 1350B, so 1024 needed only ~17% hole density to kill
+/// the whole connection; 4096 needs ~70%. `COMPACT_THRESHOLD` follows automatically.
+const MAX_CHUNKS: usize = 4096;
 
 /// Minimum size of a defragmented chunk that is retained without coalescing.
 ///
